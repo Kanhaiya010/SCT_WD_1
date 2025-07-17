@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Space/X</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark-mode">
+
+  <!-- Navigation -->
+  <nav>
+    <div class="container main-nav flex">
+      <a href="#" class="company-logo flex">
+        <img src="./assets/logo (2).png" alt="Company Logo" />
+        <span class="logo-text">Space/X</span>
+      </a>
+
+      <div class="nav-controls flex">
+        <button id="theme-toggle" title="Toggle theme">🌙</button>
+        <button id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links" class="hamburger">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <div id="nav-links" class="nav-links">
+        <ul class="flex">
+          <li><a href="#" class="hover-link">Products</a></li>
+          <li><a href="#" class="hover-link">Customers</a></li>
+          <li><a href="#" class="hover-link">Pricing</a></li>
+          <li><a href="#" class="hover-link">Resources</a></li>
+          <li><a href="login.html" class="hover-link">Sign In</a></li>
+        </ul>
+        <a href="signup.html" class="hover-link btn nav-signup-btn">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header>
+    <canvas id="starfield"></canvas>
+    <div class="container hero-content">
+      <h1 class="hero-title">Welcome to Space/X</h1>
+      <p class="hero-subtitle">Discover amazing features to boost your productivity.</p>
+      <a href="signup.html" class="hero-cta btn">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container features-grid">
+      <div class="feature-card">
+        <h3>Rocket Launches</h3>
+        <p>Track upcoming and past rocket launches across the world in real-time.</p>
+      </div>
+      <div class="feature-card">
+        <h3>SpaceX Missions</h3>
+        <p>Explore detailed insights about all past and future SpaceX missions.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Star Tracker</h3>
+        <p>Locate stars, constellations, and satellites with our live star map.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial Section -->
+  <section class="testimonial-section">
+    <div class="container testimonial-card">
+      <h2>Our Budget People & Achievements</h2>
+      <p>At Space/X, we pride ourselves on empowering budget-conscious space enthusiasts who seek the best without breaking the bank.</p>
+      <p>Join thousands of satisfied users who’ve enhanced their space exploration experience through our cutting-edge tools and insights.</p>
+      <div class="testimonial-author"><strong>— The Space/X Team</strong></div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="#" class="footer-logo flex">
+        <img src="./assets/logo (2).png" alt="Company Logo" />
+        <span class="logo-text">Space/X</span>
+      </a>
+      <p class="footer-credits">Made by Kanhaiya</p>
+      <div class="social-icons">
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" /></a>
+        <a href="#"><img src="assets/asset 26.png" alt="LinkedIn" /></a>
+        <a href="#"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg" alt="Twitter" /></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', !expanded);
+      navLinks.classList.toggle('active');
+    });
+
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    const numStars = 150;
+    let width, height;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function initStars() {
+      resizeCanvas();
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.2,
+          alpha: Math.random(),
+          speed: 0.02 + Math.random() * 0.03
+        });
+      }
+    }
+
+    function animateStars() {
+      if (!document.body.classList.contains('dark-mode')) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let s of stars) {
+        s.alpha += s.speed;
+        if (s.alpha <= 0 || s.alpha >= 1) s.speed = -s.speed;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha.toFixed(2)})`;
+        ctx.shadowColor = 'white';
+        ctx.shadowBlur = s.radius * 5;
+        ctx.fill();
+      }
+      requestAnimationFrame(animateStars);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initStars();
+    });
+
+    const toggleBtn = document.getElementById('theme-toggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      document.body.classList.toggle('light-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      toggleBtn.textContent = isDark ? '🌙' : '☀️';
+      canvas.style.display = isDark ? 'block' : 'none';
+      if (isDark) {
+        initStars();
+        animateStars();
+      }
+    });
+
+    initStars();
+    animateStars();
+  </script>
+</body>
+</html>
